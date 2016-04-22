@@ -1,5 +1,6 @@
 var Discord = new require("discord.js");
 var fs = require("fs");
+var helper = require('./helper.js')
 
 var bot = new Discord.Client();
 
