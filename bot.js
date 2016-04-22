@@ -7,11 +7,13 @@ var commands = require('./commands.js');
 var bot = new Discord.Client();
 
 bot.on("message", function (message) {
+    if (message.author == bot.user) {
+        return;
+    }
     var messageContents = message.content.split(" ");
     var curCommand = commands[messageContents[0]];
-    console.log(curCommand);
     
-    if (helper.checkPrivilege(message, curCommand)) {
+    if (curCommand && helper.checkPrivilege(message, curCommand)) {
         curCommand.process(bot, message);
     } else {
         // display message saying they they need to check their privilege

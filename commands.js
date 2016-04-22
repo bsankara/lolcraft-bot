@@ -4,7 +4,7 @@ module.exports = {
         process: function(bot, message) {
             console.log("Adding Command");
         },
-        role: "@everyone"
+        role: ""
     },
     "!Kill": {
         description: "Kill the Bot",
@@ -14,5 +14,13 @@ module.exports = {
             process.exit(0);
         },
         role: "admin"
+    },
+    "Ping": {
+        description: "Ping Pong",
+        process: function(bot, message) {
+            console.log("Ping pong")
+            bot.sendMessage(message.channel, " " + message.sender + " pong!");
+        },
+        role: ""
     }
 }
