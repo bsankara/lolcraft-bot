@@ -12,10 +12,10 @@ bot.on("message", function (message) {
     }
     var messageContents = message.content.split(" ");
     var curCommand = commands[messageContents[0]];
-    
+
     if (!curCommand) {
-        bot.reply(message, "That is not a valid command!");        
-    } 
+        bot.reply(message, "That is not a valid command!");
+    }
     if (helper.checkPrivilege(message, curCommand)) {
         curCommand.process(bot, message);
     } else {

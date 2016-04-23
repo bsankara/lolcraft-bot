@@ -1,5 +1,5 @@
 module.exports = {
-    checkPrivilege : function(message, command) {
+    checkPrivilege: function (message, command) {
         if (command.role === "") {
             return true;
         }
