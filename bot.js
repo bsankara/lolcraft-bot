@@ -16,10 +16,12 @@ bot.on("message", function (message) {
     if (!curCommand) {
         bot.reply(message, "That is not a valid command!");
     }
-    if (helper.checkPrivilege(message, curCommand)) {
-        curCommand.process(bot, message);
-    } else {
-        bot.reply(message, "Check that you have the appropriate privilege to use that command");
+    else { 
+        if (helper.checkPrivilege(message, curCommand)) {
+            curCommand.process(bot, message);
+        } else {
+            bot.reply(message, "Check that you have the appropriate privilege to use that command");
+        }
     }
 });
 var obj = JSON.parse(fs.readFileSync('settings.json', 'utf8'));

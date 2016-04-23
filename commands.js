@@ -46,6 +46,16 @@ module.exports = {
     "!Trivia": {
         description: "Creates a new Trivia Game",
         process: function (bot, message) {
+            var messageContents = message.content.split(" ");
+            // messageContents[0] is the !Trivia part of it
+            if (messageContents[1].toLowerCase() === "list") {
+                helper.listTriviaPackages(bot, message.author);
+            } else if (messageContents[1].toLowerCase() == "start") {
+                // messageContents[2] is the trivia package they want to try
+                helper.startTriviaGame(bot, message.channel, messageContents[2]);
+            } else {
+                bot.reply(message, "I could not understand that trivia command, the available commands are `!Trivia List` and `!Trivia Start <Package>`");
+            }
         },
         role: ""
     },
@@ -55,13 +65,15 @@ module.exports = {
             messages = [];
             messages.push("");
             messages.push("**Available Commands:**");
-            messages.push("**!addCommand:**");
-            messages.push("**!Kill**");
-            messages.push("**Ping**");
-            messages.push("**!Purge**");
-            messages.push("**!Filter**");
-            messages.push("**!Mafia**");
-            messages.push("**!Trivia**");
+            messages.push("```")
+            messages.push("!addCommand");
+            messages.push("!Kill");
+            messages.push("Ping");
+            messages.push("!Purge");
+            messages.push("!Filter");
+            messages.push("!Mafia");
+            messages.push("!Trivia");
+            messages.push("```");
             helper.sendMessageList(bot, messages, message.author);
         },
         role: ""
