@@ -13,10 +13,13 @@ bot.on("message", function (message) {
     var messageContents = message.content.split(" ");
     var curCommand = commands[messageContents[0]];
     
-    if (curCommand && helper.checkPrivilege(message, curCommand)) {
+    if (!curCommand) {
+        bot.reply(message, "That is not a valid command!");        
+    } 
+    if (helper.checkPrivilege(message, curCommand)) {
         curCommand.process(bot, message);
     } else {
-        // display message saying they they need to check their privilege
+        bot.reply(message, "Check that you have the appropriate privilege to use that command");
     }
 });
 var obj = JSON.parse(fs.readFileSync('settings.json', 'utf8'));

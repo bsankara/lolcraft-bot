@@ -22,5 +22,17 @@ module.exports = {
             bot.sendMessage(message.channel, " " + message.sender + " pong!");
         },
         role: ""
+    },
+    "!Purge": {
+        description: "Deletes X messages",
+        process: function(bot, message) {
+        },
+        role: "admin"
+    },
+    "!Filter": {
+        description: "Adds a Word to be Filtered",
+        process: function(bot, message) {
+        },
+        role: "admin"
     }
 }
