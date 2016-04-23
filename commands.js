@@ -1,3 +1,5 @@
+var helper = require('./helper.js');
+
 module.exports = {
     "!addCommand": {
         description: "Add a new Command",
@@ -16,7 +18,7 @@ module.exports = {
         role: "admin"
     },
     "Ping": {
-        description: "Ping Pong",
+        description: "Responds with Pong if the bot is online and functional",
         process: function (bot, message) {
             console.log("Ping pong")
             bot.sendMessage(message.channel, " " + message.sender + " pong!");
@@ -48,10 +50,19 @@ module.exports = {
         role: ""
     },
     "!Help": {
-        description: "This command right now",
+        description: "Displays a list of available commands",
         process: function(bot, message) {
-            // TODO: Actually send useful help text
-            bot.sendMessage(message.author, "This is our help text");
+            messages = [];
+            messages.push("");
+            messages.push("**Available Commands:**");
+            messages.push("**!addCommand:**");
+            messages.push("**!Kill**");
+            messages.push("**Ping**");
+            messages.push("**!Purge**");
+            messages.push("**!Filter**");
+            messages.push("**!Mafia**");
+            messages.push("**!Trivia**");
+            helper.sendMessageList(bot, messages, message.author);
         },
         role: ""
     }

@@ -11,5 +11,14 @@ module.exports = {
             }
         }
         return false;
+    },
+    
+    sendMessageList: function(bot, messages, location) {
+        var completeMessage = "";
+        for (var i = 0; i < messages.length; i++) {
+            completeMessage += messages[i];
+            completeMessage += "\n";
+        }
+        bot.sendMessage(location, completeMessage);
     }
 }
