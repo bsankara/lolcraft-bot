@@ -5,8 +5,14 @@ var commands = require('./commands.js');
 
 
 var bot = new Discord.Client();
+var dbName = "./stats.db";
+
+if (!helper.fileExists(dbName)){
+    helper.createDB(dbName);
+}
 
 bot.on("message", function (message) {
+    helper.trackMessage(message);
     if (message.author == bot.user) {
         return;
     }
@@ -14,7 +20,9 @@ bot.on("message", function (message) {
     var curCommand = commands[messageContents[0]];
 
     if (!curCommand) {
-        bot.reply(message, "That is not a valid command!");
+        if (messageContents[0][0] == '!') {
+            bot.reply(message, "That is not a valid command!");
+        }
     }
     else { 
         if (helper.checkPrivilege(message, curCommand)) {
@@ -25,5 +33,5 @@ bot.on("message", function (message) {
     }
 });
 var obj = JSON.parse(fs.readFileSync('settings.json', 'utf8'));
-bot.login(obj.loginUserName, obj.loginPassword).then();
+bot.login(obj.loginUserName, obj.loginPassword).then(helper.startStatTracking());
 
