@@ -3,6 +3,7 @@ var sqlite = require("sqlite3").verbose();
 var fs = require("fs");
 var file = "./stats.db";
 var msgCount = {};
+var db;
 
 function messageSend(bot, messages, location) {
     var completeMessage = "";
@@ -13,7 +14,7 @@ function messageSend(bot, messages, location) {
     bot.sendMessage(location, completeMessage);
 }
 
-function updateUser(user, server, db) {
+function updateUser(user, server) {
     var getStmt = db.prepare("SELECT * FROM individualStats WHERE username == ? AND server == ?");
     getStmt.get(user, server, function (err, row) {
         if (row) {
@@ -32,6 +33,13 @@ function updateUser(user, server, db) {
         }
     });
     getStmt.finalize();
+}
+
+function pushMessage(text, user, server) {
+    db.serialize(function() {
+        var stmt = db.prepare("INSERT INTO msgLog (msgText, username, server) VALUES(?,?,?)");
+        stmt.run(text, user, server);
+    });
 }
 
 module.exports = {
@@ -82,6 +90,7 @@ module.exports = {
         }
         var username = message.author.username;
         var serverName = message.channel.server.name;
+        pushMessage(message.content, username, serverName);
         if (msgCount[username] && msgCount[username][serverName]) {
             msgCount[username][serverName] += 1;
         } else {
@@ -95,11 +104,10 @@ module.exports = {
 
     startStatTracking: function () {
         setInterval(function () {
-            db = new sqlite.Database(file);
             db.serialize(function () {
                 for (var user in msgCount) {
                     for (var server in msgCount[user]) {
-                        updateUser(user, server, db);
+                        updateUser(user, server);
                     }
                 }
             });
@@ -120,7 +128,11 @@ module.exports = {
         db = new sqlite.Database(file);
         db.serialize(function () {
             db.run("CREATE TABLE individualStats (username TEXT, server TEXT, count INT)");
+            db.run("CREATE TABLE msgLog (msgText TEXT, username TEXT, server TEXT)");
         });
-        db.close();
+    },
+    
+    openDB: function(file) {
+        db = new sqlite.Database(file);
     }
 }
