@@ -77,5 +77,12 @@ module.exports = {
             helper.sendMessageList(bot, messages, message.author);
         },
         role: ""
+    },
+    "!Statistics": {
+        description: "Displays recorded statistics",
+        process: function(bot, message) {
+            helper.printStatistics(bot, message);
+        },
+        role: ""
     }
 }

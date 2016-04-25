@@ -99,7 +99,6 @@ module.exports = {
             }
             msgCount[username][serverName] = 1;
         }
-        console.log(msgCount);
     },
 
     startStatTracking: function () {
@@ -131,8 +130,18 @@ module.exports = {
             db.run("CREATE TABLE msgLog (msgText TEXT, username TEXT, server TEXT)");
         });
     },
-    
+
     openDB: function(file) {
         db = new sqlite.Database(file);
+    },
+    
+    printStatistics: function(bot, message) {
+        var messages = [""];
+        db.serialize(function() {
+            var stmt = db.prepare("SELECT * FROM individualStats WHERE server==?");
+            stmt.each(message.channel.server.name, function(err, row) {
+               bot.sendMessage(message.channel, row.username + ": " + row.count);
+            });
+        });
     }
 }
