@@ -1,10 +1,18 @@
 var helper = require('./helper.js');
 
 module.exports = {
-    "!addCommand": {
-        description: "Add a new Command",
+    "!alias": {
+        description: "Alias a word for another",
         process: function (bot, message) {
-            console.log("Adding Command");
+            var messageContents = message.content.split(" ");
+            if (!messageContents[1]) {
+                bot.reply(message, "You must set a new keyword as the alias");
+            } else if (!helper.checkValidAlias(messageContents[1])) {
+                bot.reply(message, "You cannot alias an existing command");
+            } else {
+                var messageRemnant = message.content.substring(messageContents[0].length + messageContents[1].length + 1);
+                helper.addAlias(messageContents[1], messageRemnant);
+            }
         },
         role: ""
     },
@@ -84,7 +92,7 @@ module.exports = {
             messages.push("");
             messages.push("**Available Commands:**");
             messages.push("```")
-            messages.push("!addCommand");
+            messages.push("!alias");
             messages.push("!Kill");
             messages.push("Ping");
             messages.push("!Purge");
