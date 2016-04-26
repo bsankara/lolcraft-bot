@@ -46,6 +46,12 @@ module.exports = {
     "!Filter": {
         description: "Adds a Word to be Filtered",
         process: function (bot, message) {
+            var messageContents = message.content.split(" ");
+            if (messageContents[1]) {
+                helper.addToFilter(messageContents[1]);
+            } else  {
+                bot.reply(message, "You need to write a word to be filtered, in the form !Filter <word>");
+            }
         },
         role: "admin"
     },

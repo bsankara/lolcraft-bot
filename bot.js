@@ -15,8 +15,12 @@ if (!helper.fileExists(dbName)){
 
 bot.on("message", function (message) {
     helper.trackMessage(message);
-    // tmp disable messages because I want to be able to run this on a "real" server
-    /*if (message.author == bot.user) {
+    /*
+    if (helper.checkFilter()) {
+        bot.deleteMessage(message);
+    }
+    tmp disable messages because I want to be able to run this on a "real" server
+    if (message.author == bot.user) {
         return;
     }
     var messageContents = message.content.split(" ");
