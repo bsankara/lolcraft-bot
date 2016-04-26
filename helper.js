@@ -130,6 +130,7 @@ module.exports = {
             db.run("CREATE TABLE individualStats (username TEXT, server TEXT, count INT)");
             db.run("CREATE TABLE msgLog (msgText TEXT, username TEXT, server TEXT)");
             db.run("CREATE TABLE filters (word TEXT, server TEXT)");
+            db.run("CREATE TABLE aliasCommands (command TEXT, output TEXT, server TEXT)");
         });
     },
 
@@ -165,6 +166,20 @@ module.exports = {
                  }
                  return false;
             });
+        });
+    },
+    
+    addAlias: function(command, output, server) {
+        db.serialize(function() {
+            var stmt = db.prepare("INSERT INTO aliasCommands (command, output, server) VALUES (?,?,?)");
+            stmt.run(command, output, server);
+        });
+    },
+    
+    removeAlias: function(command, server) {
+        db.serialize(function() {
+           var stmt = db.prepare("DELETE FROM aliasCommands WHERE command==? AND server ==?");
+           stmt.run(command, server);
         });
     }
 }
