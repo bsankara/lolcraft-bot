@@ -5,7 +5,7 @@ var fs = require("fs");
 var file = "./stats.db";
 var msgCount = {};
 var db;
-var filtered = [];
+
 function messageSend(bot, messages, location) {
     var completeMessage = "";
     for (var i = 0; i < messages.length; i++) {
@@ -129,6 +129,7 @@ module.exports = {
         db.serialize(function () {
             db.run("CREATE TABLE individualStats (username TEXT, server TEXT, count INT)");
             db.run("CREATE TABLE msgLog (msgText TEXT, username TEXT, server TEXT)");
+            db.run("CREATE TABLE filters (word TEXT, server TEXT)");
         });
     },
 
@@ -146,15 +147,24 @@ module.exports = {
         });
     },
     
-    addToFilter: function(word) {
-        filtered.push(word);
+    addToFilter: function(word, server) {
+        db.serialize(function() {
+           var stmt = db.prepare("INSERT INTO filters (word, server) VALUES (?, ?)");
+           stmt.run(word, server);
+        });
     },
     
-    checkFilter: function(msgText) {
-        for (var i = 0; i < filtered.length; i++) {
-            if (msgText.indexOf(filtered[i]) > -1) {
-                return true;
-            }
-        }
+    checkFilter: function(msgText, server) {
+        db.serialize(function() {
+            var stmt = db.prepare("SELECT * FROM filters WHERE server==?");
+            stmt.all(server, function(err, rows) {
+                 for (var i = 0; i < rows.length; i++) {
+                     if (msgText.indexOf(row[i].word) > -1) {
+                         return true;
+                     }
+                 }
+                 return false;
+            });
+        });
     }
 }
