@@ -26,8 +26,20 @@ module.exports = {
         role: ""
     },
     "!Purge": {
-        description: "Deletes X messages",
+        description: "Deletes X messages (up to 100)",
         process: function (bot, message) {
+            var messageContents = message.content.split(" ");
+            if (!messageContents[1]) {
+                bot.reply(message, "You must specify the number of messages to delete");
+            } else if (messageContents[1] > 100) {
+                bot.reply(message, "You can only delete less than 100 messages");
+            } else {
+                bot.getChannelLogs(message.channel, 100).then(function(logs) {
+                    for (var i = 0; i < logs.length; i++) {
+                        bot.deleteMessage(logs[i]);
+                    } 
+                });
+            }
         },
         role: "admin"
     },
