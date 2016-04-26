@@ -11,7 +11,7 @@ module.exports = {
                 bot.reply(message, "You cannot alias an existing command");
             } else {
                 var messageRemnant = message.content.substring(messageContents[0].length + messageContents[1].length + 1);
-                helper.addAlias(messageContents[1], messageRemnant);
+                helper.addAlias(messageContents[1], messageRemnant, message.channel.server);
             }
         },
         role: ""
@@ -42,7 +42,7 @@ module.exports = {
             } else if (messageContents[1] > 100) {
                 bot.reply(message, "You can only delete less than 100 messages");
             } else {
-                bot.getChannelLogs(message.channel, 100).then(function(logs) {
+                bot.getChannelLogs(message.channel, messageContents[1]).then(function(logs) {
                     for (var i = 0; i < logs.length; i++) {
                         bot.deleteMessage(logs[i]);
                     } 
@@ -56,7 +56,7 @@ module.exports = {
         process: function (bot, message) {
             var messageContents = message.content.split(" ");
             if (messageContents[1]) {
-                helper.addToFilter(messageContents[1]);
+                helper.addToFilter(messageContents[1], message.channel.server);
             } else  {
                 bot.reply(message, "You need to write a word to be filtered, in the form !Filter <word>");
             }
