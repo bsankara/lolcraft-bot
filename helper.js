@@ -5,6 +5,11 @@ var fs = require("fs");
 var file = "./stats.db";
 var msgCount = {};
 var db;
+var triviaInformation = {
+    questions: {},
+    triviaOnline: {},
+    questionIndex: {}
+};
 
 function messageSend(bot, messages, location) {
     var completeMessage = "";
@@ -79,7 +84,15 @@ module.exports = {
         }
         var type = triviaType.toLowerCase();
         if (trivia[type]) {
-            // start the trivia game
+            // get the question list
+            var questions = trivia[type].questions;
+            var shuffle = require('knuth-shuffle');
+            // modifies the array, but thats okay because we create a copy of it
+            var shuffled = shuffle(questions);
+            triviaInformation.questionIndex[location] = 0;
+            triviaInformation.triviaOnline[location] = true;
+            triviaInformation.questions[location] = shuffled;
+            bot.sendMessage(location, shuffled[0].question);
         } else {
             bot.sendMessage(location, "That is not a valid trivia type")
         }
